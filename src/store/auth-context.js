@@ -1,14 +1,16 @@
-import React, { createContext} from "react";
+import React, { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext({
+  isLoggedIn: false,
   loginHandler: () => {},
   signUpHandler: () => {},
+  logoutHandler: () => {},
 });
 
 export const AuthContextProvider = (props) => {
-
-  const navigate=useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const navigate = useNavigate();
 
   const loginHandler = async (email, password) => {
     try {
@@ -28,7 +30,6 @@ export const AuthContextProvider = (props) => {
       );
 
       const data = await response.json();
-      console.log("data is", data);
 
       if (!response.ok) {
         throw new Error(data.error.message);
@@ -36,7 +37,7 @@ export const AuthContextProvider = (props) => {
 
       localStorage.setItem("token", data.idToken);
       localStorage.setItem("email", email);
-
+      setIsLoggedIn(true);
       navigate("/home");
     } catch (error) {
       alert(error.message);
@@ -61,19 +62,30 @@ export const AuthContextProvider = (props) => {
       );
 
       const data = await response.json();
-      console.log("data is", data);
 
       if (!response.ok) {
         throw new Error(data.error.message);
       }
+
+      return data;
     } catch (error) {
       alert(error.message);
+      return null;
     }
   };
 
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
+
   const contextValue = {
-    loginHandler: loginHandler,
-    signUpHandler: signUpHandler,
+    isLoggedIn,
+    loginHandler,
+    signUpHandler,
+    logoutHandler,
   };
 
   return (

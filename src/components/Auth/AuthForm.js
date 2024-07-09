@@ -13,6 +13,7 @@ const AuthForm = () => {
   const authCtx = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
+  const [signupSuccess, setSignupSuccess] = useState(false); // State to track sign-up success
 
   const toggleIsLogin = () => {
     setIsLogin(!isLogin);
@@ -26,21 +27,24 @@ const AuthForm = () => {
   const loginHandler = async () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
-    const enteredConfirmPassword = confirmPasswordInputRef.current.value;
 
     if (isLogin) {
-      authCtx.loginHandler(enteredEmail, enteredPassword);
+      // Handle login
     } else {
+      const enteredConfirmPassword = confirmPasswordInputRef.current.value;
       if (enteredPassword !== enteredConfirmPassword) {
         alert("Passwords do not match!");
         return;
       }
 
-      authCtx.signUpHandler(enteredEmail, enteredPassword);
-      setIsLogin(true);
-
-      emailInputRef.current.value = "";
-      passwordInputRef.current.value = "";
+      const signUpData = await authCtx.signUpHandler(enteredEmail, enteredPassword);
+      if (signUpData) {
+        setSignupSuccess(true); // Update state to indicate sign-up success
+        setIsLogin(true); // Switch back to login mode
+        emailInputRef.current.value = "";
+        passwordInputRef.current.value = "";
+        confirmPasswordInputRef.current.value = "";
+      }
     }
   };
 
@@ -50,61 +54,58 @@ const AuthForm = () => {
   };
 
   return (
-    <>
-      {!localStorage.getItem("token") ? (
-        <section className={classes.auth}>
-          <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-          <form onSubmit={submitHandler}>
-            <div className={classes.control}>
-              <input
-                type="email"
-                placeholder="Email"
-                ref={emailInputRef}
-                required
-              />
-            </div>
-            <div className={classes.control}>
-              <input
-                type="password"
-                placeholder="Password"
-                ref={passwordInputRef}
-                required
-              />
-            </div>
-            {!isLogin && (
-              <div className={classes.control}>
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  ref={confirmPasswordInputRef}
-                  required
-                />
-              </div>
-            )}
-            {isLogin && (
-              <div className={classes["forgot-password-container"]}>
-                <Link to="/forgotPassword">Forgot Password?</Link>
-              </div>
-            )}
-            <div className={classes.actions}>
-              <button type="submit">
-                {isLogin ? "Login" : "Create Account"}
-              </button>
-            </div>
-          </form>
-          <div className={classes.footer}>
-            <p>
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
-              <button onClick={toggleIsLogin}>
-                {isLogin ? "Sign Up" : "Login"}
-              </button>
-            </p>
-          </div>
-        </section>
-      ) : (
-        <p>Welcome!</p>
+    <section className={classes.auth}>
+      <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+      {signupSuccess && (
+        <p className={classes.successMessage}>Sign up successful! Please log in.</p>
       )}
-    </>
+      <form onSubmit={submitHandler}>
+        <div className={classes.control}>
+          <input
+            type="email"
+            placeholder="Email"
+            ref={emailInputRef}
+            required
+          />
+        </div>
+        <div className={classes.control}>
+          <input
+            type="password"
+            placeholder="Password"
+            ref={passwordInputRef}
+            required
+          />
+        </div>
+        {!isLogin && (
+          <div className={classes.control}>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              ref={confirmPasswordInputRef}
+              required
+            />
+          </div>
+        )}
+        {isLogin && (
+          <div className={classes["forgot-password-container"]}>
+            <Link to="/forgotPassword">Forgot Password?</Link>
+          </div>
+        )}
+        <div className={classes.actions}>
+          <button type="submit">
+            {isLogin ? "Login" : "Create Account"}
+          </button>
+        </div>
+      </form>
+      <div className={classes.footer}>
+        <p>
+          {isLogin ? "Don't have an account?" : "Already have an account?"}
+          <button onClick={toggleIsLogin}>
+            {isLogin ? "Sign Up" : "Login"}
+          </button>
+        </p>
+      </div>
+    </section>
   );
 };
 
