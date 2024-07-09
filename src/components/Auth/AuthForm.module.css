@@ -1,0 +1,112 @@
+.auth {
+    margin: 3rem auto;
+    margin-top: 100px;
+    width: 95%;
+    max-width: 25rem;
+    border-radius: 6px;
+    background-color: #f7f7f7;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .auth h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  
+  .control {
+    margin-bottom: 1rem;
+  }
+  
+  .control label {
+    color: #666;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .control input {
+    font: inherit;
+    background-color: #fff;
+    color: #333;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: calc(100% - 2rem);
+    text-align: left;
+    padding: 0.5rem;
+  }
+  
+  .actions {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .actions button {
+    cursor: pointer;
+    font: inherit;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 40px;
+    padding: 0.75rem 2rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .actions button:hover {
+    background-color: #0056b3;
+  }
+  
+  .actions .toggle {
+    margin-top: 1rem;
+    background-color: transparent;
+    color: #333;
+    border: none;
+    padding: 0.25rem 1.5rem;
+  }
+  
+  .actions .toggle:hover {
+    color: #666;
+  }
+  
+  .footer {
+    margin-top: 2rem;
+    text-align: center;
+  }
+  
+  .footer p {
+    color: #333;
+  }
+  
+  .footer button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #007bff;
+    font-weight: bold;
+    font-size: 1rem;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+  }
+  
+  .footer button:hover {
+    color: #0056b3;
+  }
+  
+  .forgot-password-container {
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+  
+  .forgot-password-container a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+  }
+  
+  .forgot-password-container a:hover {
+    color: #0056b3;
+  }
+  
