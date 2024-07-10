@@ -1,10 +1,9 @@
 import { useRef, useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import classes from "./AuthForm.module.css";
 import AuthContext from "../../store/auth-context";
 
 const AuthForm = () => {
-  const navigate = useNavigate();
 
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
@@ -13,7 +12,6 @@ const AuthForm = () => {
   const authCtx = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState(true);
-  const [signupSuccess, setSignupSuccess] = useState(false); // State to track sign-up success
 
   const toggleIsLogin = () => {
     setIsLogin(!isLogin);
@@ -29,7 +27,7 @@ const AuthForm = () => {
     const enteredPassword = passwordInputRef.current.value;
 
     if (isLogin) {
-      // Handle login
+      await authCtx.loginHandler(enteredEmail, enteredPassword);
     } else {
       const enteredConfirmPassword = confirmPasswordInputRef.current.value;
       if (enteredPassword !== enteredConfirmPassword) {
@@ -37,10 +35,9 @@ const AuthForm = () => {
         return;
       }
 
-      const signUpData = await authCtx.signUpHandler(enteredEmail, enteredPassword);
-      if (signUpData) {
-        setSignupSuccess(true); // Update state to indicate sign-up success
-        setIsLogin(true); // Switch back to login mode
+      const signUpSuccess = await authCtx.signUpHandler(enteredEmail, enteredPassword);
+      if (signUpSuccess) {
+        setIsLogin(true);
         emailInputRef.current.value = "";
         passwordInputRef.current.value = "";
         confirmPasswordInputRef.current.value = "";
@@ -56,9 +53,6 @@ const AuthForm = () => {
   return (
     <section className={classes.auth}>
       <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-      {signupSuccess && (
-        <p className={classes.successMessage}>Sign up successful! Please log in.</p>
-      )}
       <form onSubmit={submitHandler}>
         <div className={classes.control}>
           <input

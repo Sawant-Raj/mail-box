@@ -1,0 +1,76 @@
+.compose-mail-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 46rem;
+  width: 100%;
+  max-width: 900px;
+  background-color: #f9f9f9; /* Light background color */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  margin: auto;
+  color: #333;
+}
+
+.compose-mail-form {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 1rem;
+}
+
+.recipient-input,
+.subject-input {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.recipient-input:focus,
+.subject-input:focus {
+  border-color: #007bff; /* Focus color */
+  border-width: 2px;
+}
+
+.text-editor-wrapper {
+  width: 100%;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.text-editor {
+  min-height: 300px;
+  padding: 15px;
+}
+
+.send-button {
+  padding: 15px 60px;
+  background-color: #007bff; /* Blue send button */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.send-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.text-editor .rdw-editor-toolbar {
+  background-color: #f1f1f1; /* Light gray toolbar background */
+  border: none;
+}
+
+.text-editor .rdw-editor-main {
+  background-color: #fff; /* White editor background */
+  border: none;
+}

@@ -67,10 +67,12 @@ export const AuthContextProvider = (props) => {
         throw new Error(data.error.message);
       }
 
-      return data;
+      alert("Sign up successful! Please log in.");
+
+      return true;
     } catch (error) {
       alert(error.message);
-      return null;
+      return false;
     }
   };
 
