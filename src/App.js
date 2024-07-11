@@ -5,6 +5,7 @@ import ForgotPassword from "./components/Auth/ForgotPassword";
 import Error from "./pages/Error";
 import Home from "./pages/Home";
 import AuthContext from "./store/auth-context";
+import Inbox from "./pages/Inbox";
 
 const App = () => {
   const authCtx = useContext(AuthContext);
@@ -21,6 +22,7 @@ const App = () => {
         path="/home"
         element={isLoggedIn ? <Home /> : <Navigate to="/" />}
       />
+      <Route path="/inbox" element={<Inbox />} />
       <Route path="*" element={<Error />} />
     </Routes>
   );
