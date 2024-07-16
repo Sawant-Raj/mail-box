@@ -1,30 +1,20 @@
 import React, { useContext } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import AuthForm from "./components/Auth/AuthForm";
-import ForgotPassword from "./components/Auth/ForgotPassword";
-import Error from "./pages/Error";
-import Home from "./pages/Home";
+import RoutesComponent from "./components/Routes/RoutesComponent";
 import AuthContext from "./store/auth-context";
-import Inbox from "./pages/Inbox";
+import SideBar from "./components/Layout/SideBar";
+import NavBar from "./components/Layout/NavBar";
 
 const App = () => {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
-
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={isLoggedIn ? <Navigate to="/home" /> : <AuthForm />}
-      />
-      <Route path="/forgotPassword" element={<ForgotPassword />} />
-      <Route
-        path="/home"
-        element={isLoggedIn ? <Home /> : <Navigate to="/" />}
-      />
-      <Route path="/inbox" element={<Inbox />} />
-      <Route path="*" element={<Error />} />
-    </Routes>
+    <>
+      {isLoggedIn && <NavBar />}
+      <div style={{ display: "flex" }}>
+        {isLoggedIn && <SideBar />}
+        <RoutesComponent />
+      </div>
+    </>
   );
 };
 

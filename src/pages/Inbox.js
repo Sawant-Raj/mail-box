@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import classes from "./Inbox.module.css";
+import EmailList from "../components/Email/EmailList";
+import EmailContent from "../components/Email/EmailContent";
 
 const Inbox = () => {
   const [emails, setEmails] = useState([]);
+  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const userEmail = localStorage.getItem("email");
   const userName = userEmail && userEmail.split("@")[0];
 
@@ -30,28 +34,67 @@ const Inbox = () => {
         setEmails(loadedEmails);
       } catch (error) {
         alert(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchEmails();
   }, [userName]);
 
+  const emailCheckHandler = async (id) => {
+    const selectedEmail = emails.find((email) => email.id === id);
+    if (selectedEmail.read) {
+      setSelectedEmail(selectedEmail);
+      return;
+    }
+
+    try {
+      const updatedEmail = { ...selectedEmail, read: true };
+
+      // Update the email status in Firebase
+      await fetch(
+        `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/inbox/${id}.json`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ read: true }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Update the email status in state
+      setEmails((prevEmails) =>
+        prevEmails.map((email) =>
+          email.id === id ? { ...email, read: true } : email
+        )
+      );
+      setSelectedEmail(updatedEmail);
+    } catch (error) {
+      alert("Failed to update email status.");
+    }
+  };
+
+  const backClickHandler = () => {
+    setSelectedEmail(null);
+  };
+
   return (
     <div className={classes["inbox-container"]}>
-      <h1 className="heading">Inbox</h1>
-      {emails.length === 0 ? (
-        <p>No emails found.</p>
+      <h1 className={classes.heading}>Inbox</h1>
+      {isLoading ? (
+        <div className={classes.loader}>Loading...</div>
+      ) : selectedEmail ? (
+        <EmailContent email={selectedEmail} backClickHandler={backClickHandler} />
       ) : (
-        <ul className={classes["email-list"]}>
-          {emails.map((email) => (
-            <li key={email.id} className={classes["email-item"]}>
-              <h2>{email.subject}</h2>
-              <p>From: {email.sender}</p>
-              <p>{email.message}</p>
-              <p>{new Date(email.sentAt).toLocaleString()}</p>
-            </li>
-          ))}
-        </ul>
+        <>
+          {emails.length === 0 ? (
+            <p>No emails found.</p>
+          ) : (
+            <EmailList emails={emails} emailCheckHandler={emailCheckHandler} />
+          )}
+        </>
       )}
     </div>
   );

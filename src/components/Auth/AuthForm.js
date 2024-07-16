@@ -82,7 +82,7 @@ const AuthForm = () => {
         )}
         {isLogin && (
           <div className={classes["forgot-password-container"]}>
-            <Link to="/forgotPassword">Forgot Password?</Link>
+            <Link to="/forgot-password">Forgot Password?</Link>
           </div>
         )}
         <div className={classes.actions}>

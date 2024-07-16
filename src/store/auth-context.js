@@ -38,7 +38,7 @@ export const AuthContextProvider = (props) => {
       localStorage.setItem("token", data.idToken);
       localStorage.setItem("email", email);
       setIsLoggedIn(true);
-      navigate("/home");
+      navigate("/inbox");
     } catch (error) {
       alert(error.message);
     }

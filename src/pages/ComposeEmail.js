@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import classes from "./ComposeEmail.module.css";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const ComposeEmail = () => {
@@ -10,17 +12,24 @@ const ComposeEmail = () => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const userEmail = localStorage.getItem("email");
   const userName = userEmail && userEmail.split("@")[0];
 
   const handleSendEmail = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
+
+    const contentState = editorState.getCurrentContent();
+    const plainText = contentState.getPlainText();
+    const htmlText = draftToHtml(convertToRaw(contentState));
 
     const emailContent = {
       recipient,
       subject,
-      message: editorState.getCurrentContent().getPlainText(),
+      plainText,
+      htmlText,
       sender: userEmail,
       sentAt: new Date().toISOString(),
     };
@@ -62,6 +71,8 @@ const ComposeEmail = () => {
       console.log("Email successfully sent and stored.");
     } catch (error) {
       alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
 
     // Reset form after sending
@@ -72,7 +83,9 @@ const ComposeEmail = () => {
 
   return (
     <div className={classes["compose-mail-container"]}>
-      <h1 className="heading">Compose Mail</h1>
+      <div className={classes["compose-header"]}>
+        <h2>New Message</h2>
+      </div>
       <form className={classes["compose-mail-form"]} onSubmit={handleSendEmail}>
         <input
           type="email"
@@ -111,9 +124,14 @@ const ComposeEmail = () => {
           }}
           placeholder="Compose your mail..."
         />
-        <button type="submit" className={classes["send-button"]}>
-          Send
+        <button
+          type="submit"
+          className={classes["send-button"]}
+          disabled={isLoading}
+        >
+          {isLoading ? "Sending..." : "Send"}
         </button>
+        {isLoading && <div className={classes.loader}></div>}
       </form>
     </div>
   );
