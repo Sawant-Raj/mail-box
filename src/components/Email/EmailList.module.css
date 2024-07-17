@@ -31,11 +31,12 @@
 }
 
 .dot {
-  height: 10px;
+  height: 8px;
   width: 10px;
   border-radius: 50%;
   display: inline-block;
   margin-right: 5px;
+  margin-top: 5px;
 }
 
 .unreadDot {
@@ -59,15 +60,8 @@
   width: 280px;
 }
 
-.email-subject {
-  margin-right: auto;
-  width: 100%;
-}
-
 .email-snippet {
-  color: #666;
-  margin-left: 10px;
-  text-align: start;
+  margin-right: auto;
   width: 100%;
 }
 
@@ -80,4 +74,17 @@
   margin-left: 10px;
   margin-top: 4px;
   color: #999;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 0.9em;
+}
+
+.delete-button:hover {
+  color: darkred;
 }

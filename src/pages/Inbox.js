@@ -76,6 +76,24 @@ const Inbox = () => {
     }
   };
 
+  const emailDeleteHandler = async (id) => {
+    try {
+      await fetch(
+        `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/inbox/${id}.json`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setEmails((prevEmails) => prevEmails.filter((email) => email.id !== id));
+    } catch (error) {
+      alert("Failed to delete email.");
+    }
+  };
+
   const backClickHandler = () => {
     setSelectedEmail(null);
   };
@@ -86,13 +104,20 @@ const Inbox = () => {
       {isLoading ? (
         <div className={classes.loader}>Loading...</div>
       ) : selectedEmail ? (
-        <EmailContent email={selectedEmail} backClickHandler={backClickHandler} />
+        <EmailContent
+          email={selectedEmail}
+          backClickHandler={backClickHandler}
+        />
       ) : (
         <>
           {emails.length === 0 ? (
             <p>No emails found.</p>
           ) : (
-            <EmailList emails={emails} emailCheckHandler={emailCheckHandler} />
+            <EmailList
+              emails={emails}
+              emailCheckHandler={emailCheckHandler}
+              emailDeleteHandler={emailDeleteHandler}
+            />
           )}
         </>
       )}

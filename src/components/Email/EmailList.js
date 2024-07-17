@@ -7,6 +7,13 @@ const EmailList = (props) => {
     return new Date(dateString).toLocaleDateString("en-us", options);
   };
 
+  const confirmDeleteHandler = (emailId, event) => {
+    event.stopPropagation(); // It is used to ensure that clicking the delete icon (a child element) does not trigger the onClick event of the parent element (the email item), which would open the email.
+    if (window.confirm("Are you sure you want to delete this email?")) {
+      props.emailDeleteHandler(emailId);
+    }
+  };
+
   return (
     <ul className={classes["email-list"]}>
       {props.emails.map((email) => {
@@ -34,7 +41,7 @@ const EmailList = (props) => {
               <span className={classes["email-sender"]}>
                 {email.sender.split("@")[0]}
               </span>
-              <div className={classes["email-subject"]}>
+              <div className={classes["email-snippet"]}>
                 <span className={classes["email-snippet-subject"]}>
                   {email.subject}
                 </span>
@@ -43,6 +50,12 @@ const EmailList = (props) => {
               <span className={classes["email-timestamp"]}>
                 {formatDate(email.sentAt)}
               </span>
+              <button
+                className={classes["delete-button"]}
+                onClick={(e) => confirmDeleteHandler(email.id, e)}
+              >
+                <i className="fas fa-trash"></i>
+              </button>
             </div>
           </li>
         );
