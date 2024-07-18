@@ -10,37 +10,76 @@ const Inbox = () => {
   const userEmail = localStorage.getItem("email");
   const userName = userEmail && userEmail.split("@")[0];
 
-  useEffect(() => {
-    const fetchEmails = async () => {
-      try {
-        const response = await fetch(
-          `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/inbox.json`
-        );
+  const fetchEmails = async () => {
+    try {
+      const response = await fetch(
+        `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/inbox.json`
+      );
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch emails.");
-        }
-
-        const data = await response.json();
-
-        const loadedEmails = [];
-        for (const key in data) {
-          loadedEmails.push({
-            id: key,
-            ...data[key],
-          });
-        }
-
-        setEmails(loadedEmails);
-      } catch (error) {
-        alert(error.message);
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error("Failed to fetch emails.");
       }
-    };
 
+      const data = await response.json();
+
+      const loadedEmails = [];
+      for (const key in data) {
+        loadedEmails.push({
+          id: key,
+          ...data[key],
+        });
+      }
+
+      setEmails(loadedEmails);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchEmails();
-  }, [userName]);
+
+    const intervalId = setInterval(fetchEmails, 2000); //  it returns an interval ID (intervalId) which uniquely identifies the interval created.
+
+    return () => clearInterval(intervalId); //  it is used to stop the interval identified by intervalId. This effectively cancels any further executions of the function passed to setInterval.
+  }, []);
+
+  // The return statement inside useEffect allows you to specify a cleanup function. This function is executed when the component unmounts or when the dependencies change and the effect needs to run again.
+  //  When the component unmounts (or if the dependency array changes and the effect needs to run again), React will call the cleanup function returned by useEffect.
+
+  // useEffect(() => {
+  //   const fetchEmails = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/inbox.json`
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error("Failed to fetch emails.");
+  //       }
+
+  //       const data = await response.json();
+
+  //       const loadedEmails = [];
+  //       for (const key in data) {
+  //         loadedEmails.push({
+  //           id: key,
+  //           ...data[key],
+  //         });
+  //       }
+
+  //       setEmails(loadedEmails);
+  //     } catch (error) {
+  //       alert(error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchEmails();
+  // }, [userName]);
 
   const emailCheckHandler = async (id) => {
     const selectedEmail = emails.find((email) => email.id === id);
