@@ -1,46 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import classes from "./Inbox.module.css";
 import SentEmailList from "../components/Email/SentEmailList";
 import SentEmailContent from "../components/Email/SentEmailContent";
+import useFetchEmails from "../components/Hook/useFetchEmails";
 
 const Sent = () => {
-  const [emails, setEmails] = useState([]);
-  const [selectedEmail, setSelectedEmail] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const userEmail = localStorage.getItem("email");
   const userName = userEmail && userEmail.split("@")[0];
+  const { emails, isLoading, error, fetchEmails } = useFetchEmails(
+    `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/sentbox.json`
+  );
 
-  useEffect(() => {
-    const fetchEmails = async () => {
-      try {
-        const response = await fetch(
-          `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/sentbox.json`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch emails.");
-        }
-
-        const data = await response.json();
-
-        const loadedEmails = [];
-        for (const key in data) {
-          loadedEmails.push({
-            id: key,
-            ...data[key],
-          });
-        }
-
-        setEmails(loadedEmails);
-      } catch (error) {
-        alert(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchEmails();
-  }, [userName]);
+  const [selectedEmail, setSelectedEmail] = useState(null);
 
   const emailCheckHandler = (id) => {
     const selectedEmail = emails.find((email) => email.id === id);
@@ -59,7 +30,7 @@ const Sent = () => {
         }
       );
 
-      setEmails((prevEmails) => prevEmails.filter((email) => email.id !== id));
+      fetchEmails();
     } catch (error) {
       alert("Failed to delete email.");
     }
@@ -74,6 +45,8 @@ const Sent = () => {
       <h1 className={classes.heading}>Sentbox</h1>
       {isLoading ? (
         <div className={classes.loader}>Loading...</div>
+      ) : error ? (
+        <p>{error}</p>
       ) : selectedEmail ? (
         <SentEmailContent
           email={selectedEmail}

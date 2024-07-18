@@ -124,14 +124,16 @@ const ComposeEmail = () => {
           }}
           placeholder="Compose your mail..."
         />
-        <button
-          type="submit"
-          className={classes["send-button"]}
-          disabled={isLoading}
-        >
-          {isLoading ? "Sending..." : "Send"}
-        </button>
-        {isLoading && <div className={classes.loader}></div>}
+        <div className={classes["send-button-div"]}>
+          <button
+            type="submit"
+            className={classes["send-button"]}
+            disabled={isLoading}
+          >
+            {isLoading ? "Sending..." : "Send"}
+          </button>
+          {isLoading && <div className={classes.loader}></div>}
+        </div>
       </form>
     </div>
   );
