@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./EmailContent.module.css";
 
-const EmailContent = (props) => {
+const InboxEmailContent = (props) => {
   const formattedDate = new Date(props.email.sentAt).toLocaleDateString(
     "en-US",
     {
@@ -42,4 +42,4 @@ const EmailContent = (props) => {
   );
 };
 
-export default EmailContent;
+export default InboxEmailContent;

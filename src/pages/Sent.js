@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import classes from "./Inbox.module.css";
-import InboxEmailList from "../components/Email/InboxEmailList";
-import InboxEmailContent from "../components/Email/InboxEmailContent";
+import SentEmailList from "../components/Email/SentEmailList";
+import SentEmailContent from "../components/Email/SentEmailContent";
 
-const Inbox = () => {
+const Sent = () => {
   const [emails, setEmails] = useState([]);
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -14,7 +14,7 @@ const Inbox = () => {
     const fetchEmails = async () => {
       try {
         const response = await fetch(
-          `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/inbox.json`
+          `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/sentbox.json`
         );
 
         if (!response.ok) {
@@ -42,45 +42,15 @@ const Inbox = () => {
     fetchEmails();
   }, [userName]);
 
-  const emailCheckHandler = async (id) => {
+  const emailCheckHandler = (id) => {
     const selectedEmail = emails.find((email) => email.id === id);
-    if (selectedEmail.read) {
-      setSelectedEmail(selectedEmail);
-      return;
-    }
-
-    try {
-      const updatedEmail = { ...selectedEmail, read: true };
-
-      // Update the email status in Firebase
-      // The method "PATCH" indicates that only the specified fields (in this case, read) will be updated, rather than replacing the entire email object.
-      await fetch(
-        `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/inbox/${id}.json`,
-        {
-          method: "PATCH",
-          body: JSON.stringify({ read: true }),
-          headers: {
-            "Content-Type": "application/json", //  specifies that the request body is in JSON format.
-          },
-        }
-      );
-
-      // Update the email status in state
-      setEmails((prevEmails) =>
-        prevEmails.map((email) =>
-          email.id === id ? { ...email, read: true } : email
-        )
-      );
-      setSelectedEmail(updatedEmail);
-    } catch (error) {
-      alert("Failed to update email status.");
-    }
+    setSelectedEmail(selectedEmail);
   };
 
   const emailDeleteHandler = async (id) => {
     try {
       await fetch(
-        `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/inbox/${id}.json`,
+        `https://mail-box-a4c17-default-rtdb.firebaseio.com/${userName}/sentbox/${id}.json`,
         {
           method: "DELETE",
           headers: {
@@ -101,11 +71,11 @@ const Inbox = () => {
 
   return (
     <div className={classes["inbox-container"]}>
-      <h1 className={classes.heading}>Inbox</h1>
+      <h1 className={classes.heading}>Sentbox</h1>
       {isLoading ? (
         <div className={classes.loader}>Loading...</div>
       ) : selectedEmail ? (
-        <InboxEmailContent
+        <SentEmailContent
           email={selectedEmail}
           backClickHandler={backClickHandler}
         />
@@ -114,7 +84,7 @@ const Inbox = () => {
           {emails.length === 0 ? (
             <p>No emails found.</p>
           ) : (
-            <InboxEmailList
+            <SentEmailList
               emails={emails}
               emailCheckHandler={emailCheckHandler}
               emailDeleteHandler={emailDeleteHandler}
@@ -126,4 +96,4 @@ const Inbox = () => {
   );
 };
 
-export default Inbox;
+export default Sent;

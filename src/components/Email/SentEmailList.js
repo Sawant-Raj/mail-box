@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./EmailList.module.css";
 
-const EmailList = (props) => {
+const SentEmailList = (props) => {
   const formatDate = (dateString) => {
     const options = { month: "short", day: "numeric" };
     return new Date(dateString).toLocaleDateString("en-us", options);
@@ -27,19 +27,14 @@ const EmailList = (props) => {
         return (
           <li
             key={email.id}
-            className={`${classes["email-item"]} ${
-              email.read ? classes["read"] : classes["unread"]
-            }`}
+            className={classes["email-item"]}
             onClick={() => props.emailCheckHandler(email.id)}
           >
             <div className={classes["email-header"]}>
-              <span
-                className={`${classes.dot} ${
-                  email.read ? "" : classes.unreadDot
-                }`}
-              ></span>
               <span className={classes["email-sender"]}>
-                {email.sender.split("@")[0]}
+                {email.recipient.split("@")[0].length > 20
+                  ? `${email.recipient.split("@")[0].slice(0, 20)}.`
+                  : email.recipient.split("@")[0]}
               </span>
               <div className={classes["email-snippet"]}>
                 <span className={classes["email-snippet-subject"]}>
@@ -64,4 +59,4 @@ const EmailList = (props) => {
   );
 };
 
-export default EmailList;
+export default SentEmailList;

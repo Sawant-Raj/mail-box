@@ -6,6 +6,7 @@ import Error from "../Error/Error";
 import AuthContext from "../../store/auth-context";
 import Inbox from "../../pages/Inbox";
 import ComposeEmail from "../../pages/ComposeEmail";
+import Sent from "../../pages/Sent";
 
 const RoutesComponent = () => {
   const authCtx = useContext(AuthContext);
@@ -23,6 +24,10 @@ const RoutesComponent = () => {
         element={isLoggedIn ? <Inbox /> : <Navigate to="/" />}
       />
       <Route path="/compose-email" element={<ComposeEmail />} />
+      <Route
+        path="/sent"
+        element={isLoggedIn ? <Sent /> : <Navigate to="/" />}
+      />
       <Route path="*" element={<Error />} />
     </Routes>
   );

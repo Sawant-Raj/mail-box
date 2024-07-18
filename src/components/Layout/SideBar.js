@@ -13,6 +13,9 @@ const SideBar = () => {
           <Link to="/inbox" className={classes.link}>
             Inbox
           </Link>
+          <Link to="/sent" className={classes.link}>
+            Sent
+          </Link>
         </div>
       </div>
     </>
